@@ -160,7 +160,7 @@ class App extends Component {
         return c.name.indexOf(this.state.searchKeyword) > -1;
       });
       return data.map((c)=>{
-        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.id} birthday={c.birthday} gender={c.gender} job={c.job} />
+        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
       });
     }
     const cellList = ["번호","프로필 이미지","이름","생년월일","성별","직업","설정"];
