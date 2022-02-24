@@ -1,4 +1,5 @@
 import React from 'react';
+import { post } from 'axios';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -11,7 +12,8 @@ class CustomerDelete extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            open: false
+            open: false,
+            toggle: false
         }
     }
 
@@ -27,33 +29,67 @@ class CustomerDelete extends React.Component{
         });
     }
 
-    deleteCustomer(id){
-        const url ='/api/customers/' + id;
-        fetch(url,{
-            method:'DELETE'
-        });
+   
+
+    addCustomer = () =>{
+        
+        const url ='/api/customers';
+        const formData = new FormData();
+        
+        formData.append('image',this.props.image);
+        formData.append('name',this.props.name);
+        formData.append('birthday',this.props.birthday);
+        formData.append('gender',this.props.gender);
+        formData.append('job',this.props.job);
+        const config = {
+            headers:{
+                'content-type' : 'multipart/form-data'  
+            }
+        }
+        if(this.state.toggle === true){
+            formData.append('isDeleted',0);
+            post(url,formData,config);
+        }
+           
+        else{
+            formData.append('isDeleted',1);
+            post(url,formData,config);
+        }
         this.props.stateRefresh();
+  
     }
+
+    // deleteCustomer(id){
+    //     const url ='/api/customers/' + id;
+        
+    //     fetch(url,{
+    //         method:'DELETE'
+    //     });
+    //     this.props.stateRefresh();
+    // }
 
     
     
 
     render() {
+        //secondary
+        
+       
         return (
            
             <div>
-                <Button variant="contained" color="secondary" onClick={this.handleClickOpen}>삭제</Button>
+                <Button variant="contained" color="default" onClick={this.handleClickOpen}>선택</Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
                     <DialogTitle onClose={this.handleClose}>
-                        삭제 경고
+                        버스 알림
                     </DialogTitle>
                     <DialogContent>
                         <Typography gutterBottom>
-                            선택한 고객 정보가 삭제됩니다.
+                            {!this.state.toggle ? (this.props.image+'번 버스를 탑승하시겠습니까?'):this.props.image+'번 버스 탑승을 취소하시겠습니까?'}
                         </Typography>
                     </DialogContent>
                     <DialogActions>
-                        <Button varinat="contained" color="primary" onClick={(e)=>{this.deleteCustomer(this.props.id)}}>삭제</Button>
+                        <Button varinat="contained" color="primary" onClick={(e)=>{this.addCustomer();}}>선택</Button>
                         <Button varinat="outlined" color="primary" onClick={this.handleClose}>닫기</Button>
                     </DialogActions>
                 </Dialog>     
@@ -63,4 +99,4 @@ class CustomerDelete extends React.Component{
     }
 }
 
-export default CustomerDelete;
+export default CustomerDelete;  

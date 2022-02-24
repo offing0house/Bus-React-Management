@@ -12,7 +12,6 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CustomerAdd from './component/CustomerAdd';
 
-import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -33,6 +32,7 @@ const styles = theme => ({
     
   },
   paper:{
+    marginTop:50,
     marginLeft:18,
     marginRight:18
   },
@@ -111,7 +111,8 @@ class App extends Component {
     this.state = {
       customers: '',
       completed: 0,
-      searchKeyword: ''
+      searchKeyword: '',
+      data2:''
     }
   }
 
@@ -119,10 +120,14 @@ class App extends Component {
     this.setState({
       customers: '',
       completed: 0,
-      searchKeyword: ''
+      searchKeyword: '',
+      data2:''
     });
     this.callApi()
     .then(res => this.setState({customers: res}))
+    .catch(err => console.log(err));
+    this.callApi2()
+    .then(res => this.setState({data2: res}))
     .catch(err => console.log(err));
   }
 
@@ -132,13 +137,49 @@ class App extends Component {
     this.callApi()
       .then(res => this.setState({customers: res}))
       .catch(err => console.log(err));
+    this.callApi2()
+      .then(res => this.setState({data2: res}))
+      .catch(err => console.log(err));
+
+     
+
+  }
+  // for(let i=0;i<res.elements[0].elements[2].elements.length;i=i+1){
+  //   this.setState({
+  //                 elements[0].elements[2].elements[0].elements[70].elements[0].text
+  //     버스번호:res.elements[0].elements[2].elements[i].elements[71].elements[0].text,
+  //     정류소명:res.elements[0].elements[2].elements[i].elements[77].elements[0].text, 
+  //     남은시간:res.elements[0].elements[2].elements[i].elements[0].elements[0].text,
+  //     혼잡도:res.elements[0].elements[2].elements[i].elements[68].elements[0].text,
+  //     차량번호:res.elements[0].elements[2].elements[i].elements[63].elements[0].text
+  //   }) 
+    
+  // }
+
+  
+
+
+
+  callApi2 = async () => {
+    const pathname = window.location.pathname;
+    const search = window.location.search;
+    if(pathname === '/getLowArrInfoByStId/'){
+      const response = await fetch(pathname+search);
+      const body = await response.json();
+      // console.log(body)
+      return body;
+      
+    }
+    
+  }
+  
+  callApi = async () => {
+      const response = await fetch('/api/customers');
+      const body = await response.json();
+      return body;
+    
   }
 
-  callApi = async () => {
-    const response = await fetch('/api/customers');
-    const body = await response.json();
-    return body;
-  }
 
   progress = () => {
     const { completed } = this.state;
@@ -155,15 +196,50 @@ class App extends Component {
 
 
   render(){
-    const filteredComponents = (data) => {
+    
+    const filteredComponents2 = (data) => {
+      var i = 0;
       data = data.filter((c)=>{
         return c.name.indexOf(this.state.searchKeyword) > -1;
       });
       return data.map((c)=>{
-        return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+        // console.log(c)
+        var num = '';
+        var name = '';
+        var birthday = '';
+        var gender = '';
+        var job = '';
+        i = i+1;
+        if(Number(c.elements[71].elements[0].text) <10){
+          num = c.elements[70].elements[0].text;
+          name = c.elements[74].elements[0].text;
+          birthday = c.elements[0].elements[0].text;
+          gender = c.elements[67].elements[0].text;
+          
+        }else{
+          num = c.elements[71].elements[0].text
+          name = c.elements[75].elements[0].text
+          birthday = c.elements[0].elements[0].text;
+          gender = c.elements[68].elements[0].text;
+          
+        }
+        {gender === '0' ? gender = '여유': gender === '3' ? gender = '여유' : gender === '4' ? gender = '보통' : gender = '혼잡'}
+        {c.elements[63].elements ? job = c.elements[63].elements[0].text : job = '없음'}
+    
+        return <Customer stateRefresh={this.stateRefresh} key={i} id={i} image={num} name={name} birthday={birthday} gender={gender} job={job} />
       });
     }
-    const cellList = ["번호","프로필 이미지","이름","생년월일","성별","직업","설정"];
+    
+    // const filteredComponents = (data) => {
+      
+    //   data = data.filter((c)=>{
+    //     return c.name.indexOf(this.state.searchKeyword) > -1;
+    //   });
+    //   return data.map((c)=>{
+    //     return <Customer stateRefresh={this.stateRefresh} key={c.id} id={c.id} image={c.image} name={c.name} birthday={c.birthday} gender={c.gender} job={c.job} />
+    //   });
+    // }
+    const cellList = ["번호","버스 번호","정류소명","남은 시간","혼잡도","차량 번호","탑승"];
     const { classes } = this.props;
     return (
       <div className={classes.root}>
@@ -173,7 +249,7 @@ class App extends Component {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.title} variant="h6" color="inherit" noWrap>
-            고객 관리 시스템
+            버스 알리미 
           </Typography>
           <div className={classes.grow} />
           <div className={classes.search}>
@@ -193,9 +269,16 @@ class App extends Component {
           </div>
         </Toolbar>
       </AppBar>
-        <div className={classes.menu}>
-          <CustomerAdd stateRefresh={this.stateRefresh}/>
-        </div>
+      
+        {/* <div className={classes.menu}>
+           <CustomerAdd stateRefresh={this.stateRefresh} />
+        </div> */}
+        
+        {/* this.state.data2[0].elements[71].elements[0].text */}
+        
+        
+
+
         <Paper className={classes.paper}>
           <Table className={classes.table}>
             <TableHead>
@@ -206,15 +289,27 @@ class App extends Component {
               </TableRow>
             </TableHead>
             <TableBody>
-              {this.state.customers ? 
+            {this.state.data2 ? 
+                filteredComponents2(this.state.data2) : 
+              <TableRow>
+                <TableCell colSpan="6" align="center">
+                  <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
+                </TableCell>
+                
+              </TableRow>
+              }
+              {/* {this.state.customers ? 
                 filteredComponents(this.state.customers) : 
               <TableRow>
                 <TableCell colSpan="6" align="center">
                   <CircularProgress className={classes.progress} variant="determinate" value={this.state.completed}/>
                 </TableCell>
+                
               </TableRow>
-              }
-            
+              } */}
+
+              
+             
             </TableBody>
           </Table>
         </Paper>
