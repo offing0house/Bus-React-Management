@@ -133,15 +133,13 @@ class App extends Component {
 
 
   componentDidMount(){
-    this.timer = setInterval(this.progress,20);
+    this.timer = setInterval(this.progress,2);
     this.callApi()
       .then(res => this.setState({customers: res}))
       .catch(err => console.log(err));
     this.callApi2()
       .then(res => this.setState({data2: res}))
       .catch(err => console.log(err));
-
-     
 
   }
   // for(let i=0;i<res.elements[0].elements[2].elements.length;i=i+1){
@@ -203,7 +201,7 @@ class App extends Component {
         return c.name.indexOf(this.state.searchKeyword) > -1;
       });
       return data.map((c)=>{
-        // console.log(c)
+        console.log(c)
         var num = '';
         var name = '';
         var birthday = '';
@@ -225,7 +223,7 @@ class App extends Component {
         }
         {gender === '0' ? gender = '여유': gender === '3' ? gender = '여유' : gender === '4' ? gender = '보통' : gender = '혼잡'}
         {c.elements[63].elements ? job = c.elements[63].elements[0].text : job = '없음'}
-    
+        
         return <Customer stateRefresh={this.stateRefresh} key={i} id={i} image={num} name={name} birthday={birthday} gender={gender} job={job} />
       });
     }

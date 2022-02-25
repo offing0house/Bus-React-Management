@@ -13,19 +13,24 @@ class CustomerDelete extends React.Component{
         super(props);
         this.state = {
             open: false,
-            toggle: false
+            isToggle: false
+            
         }
+        
     }
+    
 
     handleClickOpen = () =>{
         this.setState({
-            open:true
+            open:true,
+            isToggle:this.state.isToggle
         });
     }
 
     handleClose = () => {
         this.setState({
-            open:false
+            open:false,
+            isToggle:this.state.isToggle
         });
     }
 
@@ -33,6 +38,14 @@ class CustomerDelete extends React.Component{
 
     addCustomer = () =>{
         
+
+        this.setState({
+            isToggle:!this.state.isToggle,
+            open:false
+        });
+
+
+
         const url ='/api/customers';
         const formData = new FormData();
         
@@ -46,27 +59,22 @@ class CustomerDelete extends React.Component{
                 'content-type' : 'multipart/form-data'  
             }
         }
-        if(this.state.toggle === true){
-            formData.append('isDeleted',0);
-            post(url,formData,config);
-        }
-           
-        else{
-            formData.append('isDeleted',1);
-            post(url,formData,config);
-        }
-        this.props.stateRefresh();
-  
+        formData.append('isDeleted',1);
+        post(url,formData,config);
     }
 
-    // deleteCustomer(id){
-    //     const url ='/api/customers/' + id;
+    deleteCustomer(id){
         
-    //     fetch(url,{
-    //         method:'DELETE'
-    //     });
-    //     this.props.stateRefresh();
-    // }
+        const url ='/api/customers/' + id;
+        this.setState({
+            isToggle:!this.state.isToggle,
+            open:false
+        });
+        fetch(url,{
+            method:'DELETE'
+        });
+        
+    }
 
     
     
@@ -74,22 +82,21 @@ class CustomerDelete extends React.Component{
     render() {
         //secondary
         
-       
         return (
            
             <div>
-                <Button variant="contained" color="default" onClick={this.handleClickOpen}>선택</Button>
+                <Button variant="contained" color={!this.state.isToggle ? "default":"secondary"} onClick={this.handleClickOpen}>선택</Button>
                 <Dialog open={this.state.open} onClose={this.handleClose}>
                     <DialogTitle onClose={this.handleClose}>
                         버스 알림
                     </DialogTitle>
                     <DialogContent>
                         <Typography gutterBottom>
-                            {!this.state.toggle ? (this.props.image+'번 버스를 탑승하시겠습니까?'):this.props.image+'번 버스 탑승을 취소하시겠습니까?'}
+                            {!this.state.isToggle ? (this.props.image+'번 버스를 탑승하시겠습니까?'):this.props.image+'번 버스 탑승을 취소하시겠습니까?'}
                         </Typography>
                     </DialogContent>
                     <DialogActions>
-                        <Button varinat="contained" color="primary" onClick={(e)=>{this.addCustomer();}}>선택</Button>
+                        <Button varinat="contained" color="primary" onClick={this.state.isToggle?((e)=>{this.deleteCustomer(this.props.id)}):this.addCustomer}>선택</Button>
                         <Button varinat="outlined" color="primary" onClick={this.handleClose}>닫기</Button>
                     </DialogActions>
                 </Dialog>     
