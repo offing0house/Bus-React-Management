@@ -142,19 +142,6 @@ class App extends Component {
       .catch(err => console.log(err));
 
   }
-  // for(let i=0;i<res.elements[0].elements[2].elements.length;i=i+1){
-  //   this.setState({
-  //                 elements[0].elements[2].elements[0].elements[70].elements[0].text
-  //     버스번호:res.elements[0].elements[2].elements[i].elements[71].elements[0].text,
-  //     정류소명:res.elements[0].elements[2].elements[i].elements[77].elements[0].text, 
-  //     남은시간:res.elements[0].elements[2].elements[i].elements[0].elements[0].text,
-  //     혼잡도:res.elements[0].elements[2].elements[i].elements[68].elements[0].text,
-  //     차량번호:res.elements[0].elements[2].elements[i].elements[63].elements[0].text
-  //   }) 
-    
-  // }
-
-  
 
 
 
@@ -198,10 +185,16 @@ class App extends Component {
     const filteredComponents2 = (data) => {
       var i = 0;
       data = data.filter((c)=>{
-        return c.name.indexOf(this.state.searchKeyword) > -1;
+        if(Number(c.elements[71].elements[0].text) <10){
+           return c.elements[70].elements[0].text.indexOf(this.state.searchKeyword) > -1;
+        }
+        else{
+          return c.elements[71].elements[0].text.indexOf(this.state.searchKeyword) > -1;
+        }
       });
+      
       return data.map((c)=>{
-        console.log(c)
+        
         var num = '';
         var name = '';
         var birthday = '';
