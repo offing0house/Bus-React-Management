@@ -194,7 +194,7 @@ class App extends Component {
       });
       
       return data.map((c)=>{
-        
+        console.log(c)
         var num = '';
         var name = '';
         var birthday = '';
@@ -205,14 +205,19 @@ class App extends Component {
           num = c.elements[70].elements[0].text;
           name = c.elements[74].elements[0].text;
           birthday = c.elements[0].elements[0].text;
-          gender = c.elements[67].elements[0].text;
+          gender = c.elements[65].elements[0].text;
           
         }else{
           num = c.elements[71].elements[0].text
           name = c.elements[75].elements[0].text
           birthday = c.elements[0].elements[0].text;
-          gender = c.elements[68].elements[0].text;
-          
+          gender = c.elements[66].elements[0].text;
+        }
+        if(birthday.slice(-1)===']'){
+          birthday = birthday.substring(0,3)
+          if(birthday.slice(-1)!='분'){
+            birthday = birthday.substring(0,2)
+          }
         }
         {gender === '0' ? gender = '여유': gender === '3' ? gender = '여유' : gender === '4' ? gender = '보통' : gender = '혼잡'}
         {c.elements[63].elements ? job = c.elements[63].elements[0].text : job = '없음'}
