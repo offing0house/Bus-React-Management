@@ -136,17 +136,16 @@ class App extends Component {
     this.timer = setInterval(this.progress,30);
     this.callApi()
       .then(res => this.setState({customers: res}))
-      .catch(err => console.log('여기1'));
+      .catch(err => console.log(err));
     this.callApi2()
       .then(res => this.setState({data2: res}))
-      .catch(err => console.log('여기2'));
+      .catch(err => console.log(err));
   }
 
 
 
   callApi2 = async () => {
     const pathname = window.location.pathname;
-    
     const search = window.location.search;
     if(pathname === '/getLowArrInfoByStId/'){
       const response = await fetch(pathname+search);
@@ -194,7 +193,7 @@ class App extends Component {
       });
       
       return data.map((c)=>{
-        console.log(c)
+        // console.log(c)
         var num = '';
         var name = '';
         var birthday = '';
