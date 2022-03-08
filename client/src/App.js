@@ -136,10 +136,10 @@ class App extends Component {
     this.timer = setInterval(this.progress,30);
     this.callApi()
       .then(res => this.setState({customers: res}))
-      .catch(err => console.log(err));
+      .catch(err => console.log('여기1'));
     this.callApi2()
       .then(res => this.setState({data2: res}))
-      .catch(err => console.log(err));
+      .catch(err => console.log('여기2'));
   }
 
 
