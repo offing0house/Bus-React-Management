@@ -146,10 +146,10 @@ class App extends Component {
 
   callApi2 = async () => {
     const pathname = window.location.pathname;
-    let endpoint = 'http://ec2-35-78-68-96.ap-northeast-1.compute.amazonaws.com';
+    
     const search = window.location.search;
     if(pathname === '/getLowArrInfoByStId/'){
-      const response = await fetch(endpoint+pathname+search);
+      const response = await fetch(pathname+search);
       const body = await response.json();
       // console.log(body)
       return body;
