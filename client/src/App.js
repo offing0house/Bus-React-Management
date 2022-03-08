@@ -133,14 +133,13 @@ class App extends Component {
 
 
   componentDidMount(){
-    this.timer = setInterval(this.progress,2);
+    this.timer = setInterval(this.progress,30);
     this.callApi()
       .then(res => this.setState({customers: res}))
       .catch(err => console.log(err));
     this.callApi2()
       .then(res => this.setState({data2: res}))
       .catch(err => console.log(err));
-
   }
 
 

@@ -96,6 +96,15 @@ app.delete('/api/customers/:id',(req,res)=>{
     )
 });
 
+// app.truncate('/api/customers/',(req,res)=>{
+//   let sql = 'TRUNCATE CUSTOMER';
+  
+//   connection.query(sql,params,
+//     (err,rows,fields) => {
+//       res.send(rows);
+//     }
+//     )
+// });
 
 
 
